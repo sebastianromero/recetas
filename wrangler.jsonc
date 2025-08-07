@@ -3,7 +3,6 @@
   "name": "recetas",
   "compatibility_date": "2025-08-07",
   "assets": {
-	"directory": "./dist",
-	"binding": "ASSETS"
+	"directory": "./dist"
   }
 }
