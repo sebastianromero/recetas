@@ -1,8 +1,6 @@
 site:
   title: Recetas
   url: https://recetas.com
-  start_page: ROOT::index.adoc
-
 content:
   sources:
     - url: .
@@ -10,7 +8,6 @@ content:
       start_path: .
 ui:
   bundle:
-    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
-    snapshot: true
+    url: ./ui/build/ui-bundle.zip
 output:
   dir: ./public

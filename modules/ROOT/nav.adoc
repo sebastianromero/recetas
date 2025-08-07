@@ -1,1 +1,5 @@
-* xref:index.adoc[Inicio]
+* xref:ROOT:bife-criolla.adoc[]
+* xref:ROOT:pancakes-papa.adoc[]
+* xref:ROOT:pan-clasico.adoc[]
+* xref:ROOT:papas-fritas-german-martitegui.adoc[]
+* xref:ROOT:papas-gratinadas.adoc[]
