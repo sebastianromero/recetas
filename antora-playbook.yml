@@ -2,6 +2,7 @@ site:
   title: Recetas
   url: https://recetas.sebastianromero.cl
 content:
+  edit_url: ~
   sources:
     - url: .
       start_path: .
