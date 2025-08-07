@@ -4,7 +4,6 @@ site:
 content:
   sources:
     - url: .
-      branches: '*'
       start_path: .
 ui:
   bundle:
