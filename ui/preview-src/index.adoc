@@ -1,0 +1,2229 @@
+= Complete AsciiDoc Kitchen Sink: Modern Web Development Guide
+Jane Rodriguez <jane@techcorp.com>
+:description: A comprehensive guide demonstrating all AsciiDoc features through practical web development examples
+:keywords: asciidoc, documentation, web development, javascript, python, docker
+:stem:
+:toc:
+:experimental:
+:source-highlighter: highlight.js
+
+[.lead]
+This comprehensive guide demonstrates every AsciiDoc feature through real-world web development scenarios.
+From basic formatting to advanced features like mathematical expressions and interactive elements.
+
+[.float-group]
+--
+image::https://picsum.photos/250/180[Modern Web Development,250,180,float=right,role=float-gap]
+In today's rapidly evolving tech landscape, proper documentation is crucial for project success.
+This guide showcases how AsciiDoc can be used to create professional, maintainable documentation that scales with your development team.
+
+Whether you're documenting APIs, writing technical specifications, or creating user guides, this kitchen sink demonstrates the full power of AsciiDoc's semantic markup capabilities.
+--
+
+== Document Structure and Metadata
+
+This document demonstrates proper use of document attributes and metadata.
+The header contains essential information like author details, document type, and various configuration options that control rendering behavior.
+
+=== Document Attributes Examples
+
+[cols="1,2,1"]
+|===
+|Attribute |Description |Value
+
+|:doctype:
+|Defines the document structure type
+|book
+
+|:toc:
+|Table of contents placement
+|left
+
+|:stem:
+|Enables mathematical expressions
+|enabled
+
+|:experimental:
+|Enables UI macros (btn, kbd, menu)
+|enabled
+|===
+
+== Text Formatting and Inline Elements
+
+=== Basic Text Formatting
+
+Here's how to format text in various ways:
+
+* *Bold text* for emphasis
+* _Italic text_ for subtle emphasis
+* `Monospace text` for code snippets
+* #Highlighted text# for marking important content
+* [.underline]#Underlined text# for additional emphasis
+* [.line-through]#Strikethrough text# for corrections
+* [.small]#Small text# for fine print
+* [.big]#Big text# for headings
+
+=== Subscript and Superscript
+
+Chemical formulas work great: H~2~O, CO~2~, and mathematical expressions: E = mc^2^, x^2^ + y^2^ = z^2^.
+
+=== Character Replacements
+
+AsciiDoc automatically handles typography:
+
+* Quotes: "Smart quotes" and 'single quotes'
+* Dashes: -- em-dash and - hyphen
+* Ellipsis: ...
+* Arrows: -> and <-
+* Copyright: (C) becomes ©
+* Trademark: (TM) becomes ™
+* Registered: (R) becomes ®
+
+=== Cross-references and Links
+
+Internal references work with <<api-documentation,our API section>> and <<database-setup>>.
+
+External links support various formats:
+* https://github.com/asciidoctor/asciidoctor[Asciidoctor GitHub Repository]
+* https://docs.asciidoctor.org[Asciidoctor Documentation,role=external,window=_blank]
+* mailto:support@example.com[Contact Support]
+* link:downloads/api-spec.pdf[Download API Specification (PDF)]
+
+== Code Examples and Syntax Highlighting
+
+=== JavaScript Example
+
+[source,javascript]
+----
+// Modern JavaScript with ES6+ features
+class APIClient {
+  constructor(baseURL, apiKey) {
+    this.baseURL = baseURL;
+    this.apiKey = apiKey;
+    this.headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    };
+  }
+
+  async fetchData(endpoint) {
+    try {
+      const response = await fetch(`${this.baseURL}/${endpoint}`, {
+        headers: this.headers
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('API request failed:', error);
+      throw error;
+    }
+  }
+
+  // Using async/await with error handling
+  async createUser(userData) {
+    return this.fetchData('users', {
+      method: 'POST',
+      body: JSON.stringify(userData)
+    });
+  }
+}
+
+// Usage example
+const client = new APIClient('https://api.example.com', 'your-api-key');
+client.fetchData('users/123')
+  .then(user => console.log(user))
+  .catch(error => console.error(error));
+----
+
+=== Python Example with Callouts
+
+[source,python]
+....
+import asyncio
+import aiohttp
+from dataclasses import dataclass
+from typing import Optional, List
+import logging
+
+@dataclass
+class User:
+    id: int
+    name: str
+    email: str
+    is_active: bool = True
+
+class DatabaseManager:
+    def __init__(self, connection_string: str):
+        self.connection_string = connection_string
+        self.logger = logging.getLogger(__name__)
+
+    async def get_user(self, user_id: int) -> Optional[User]: # <1>
+        async with aiohttp.ClientSession() as session:
+            try:
+                async with session.get(f'/api/users/{user_id}') as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        return User(**data) # <2>
+                    return None
+            except Exception as e:
+                self.logger.error(f"Failed to fetch user {user_id}: {e}")
+                return None
+
+    async def bulk_create_users(self, users: List[dict]) -> List[User]:
+        tasks = []
+        for user_data in users:
+            task = asyncio.create_task(self.create_user(user_data)) # <3>
+            tasks.append(task)
+
+        results = await asyncio.gather(*tasks, return_exceptions=True) # <4>
+        return [result for result in results if isinstance(result, User)]
+
+# Example usage
+async def main():
+    db = DatabaseManager("postgresql://user:pass@localhost/db")
+    user = await db.get_user(123)
+    if user:
+        print(f"Found user: {user.name}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+....
+
+<1> Async function with type hints for better code documentation
+<2> Dataclass constructor automatically handles the JSON data
+<3> Create concurrent tasks for bulk operations
+<4> Gather all results and handle exceptions gracefully
+
+=== Docker Configuration
+
+[source,dockerfile]
+----
+# Multi-stage build for optimized production image
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY . .
+RUN npm run build
+
+# Production stage
+FROM nginx:alpine
+
+# Copy built application
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Custom nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost/ || exit 1
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+----
+
+=== SQL Database Schema
+
+[source,sql]
+----
+-- User management system schema
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+-- Indexing for performance
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_username ON users(username);
+CREATE INDEX idx_users_created_at ON users(created_at);
+
+-- Trigger for automatic updated_at
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_users_updated_at
+    BEFORE UPDATE ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+----
+
+=== Command Line Examples
+
+Terminal commands with proper formatting:
+
+[source,bash]
+----
+# Project setup
+$ mkdir my-web-project && cd my-web-project
+$ npm init -y
+$ npm install --save-dev webpack webpack-cli @babel/core @babel/preset-env
+
+# Development workflow
+$ npm run dev &          # Start dev server in background
+$ npm run test:watch     # Run tests in watch mode
+$ npm run lint:fix       # Fix linting issues
+
+# Production deployment
+$ docker build -t my-app:latest .
+$ docker run -p 80:80 my-app:latest
+----
+
+Individual commands can be highlighted:
+
+Execute the following to start the development server:
+
+ $ npm run dev
+
+== Lists and Task Management
+
+=== Project Roadmap (Ordered List)
+
+[upperroman]
+. *Q1 2024: Foundation Phase*
+.. Set up development environment
+.. Create basic project structure
+.. Implement user authentication
+.. Deploy to staging environment
+
+. *Q2 2024: Core Features*
+.. Develop main application features
+.. Implement API endpoints
+.. Add comprehensive testing
+.. Performance optimization
+
+. *Q3 2024: Enhancement Phase*
+.. User interface improvements
+.. Mobile responsiveness
+.. Third-party integrations
+.. Security audit
+
+. *Q4 2024: Launch Preparation*
+.. Final testing and bug fixes
+.. Documentation completion
+.. Production deployment
+.. Post-launch monitoring setup
+
+=== Development Checklist
+
+* [x] Environment setup completed
+* [x] Database schema designed
+* [x] API endpoints implemented
+* [ ] Frontend components created
+* [ ] Testing suite completed
+* [ ] Documentation finalized
+* [ ] Performance optimized
+* [ ] Security review passed
+
+=== Technology Stack (Unordered List)
+
+[square]
+* *Frontend Technologies*
+** React 18 with TypeScript
+** Tailwind CSS for styling
+** Redux Toolkit for state management
+** React Query for data fetching
+
+* *Backend Technologies*
+** Node.js with Express
+** PostgreSQL database
+** Redis for caching
+** JWT for authentication
+
+* *DevOps & Tools*
+** Docker for containerization
+** GitHub Actions for CI/CD
+** AWS for cloud infrastructure
+** Monitoring with Prometheus
+
+=== Definition List for Technical Terms
+
+API::
+Application Programming Interface - A set of protocols and tools for building software applications.
+
+REST::
+Representational State Transfer - An architectural style for distributed hypermedia systems.
+
+GraphQL::
+A query language for APIs and a runtime for executing those queries.
+
+Microservices::
+An architectural approach that structures an application as a collection of loosely coupled services.
+
+Horizontal scaling::
+The process of adding more servers to your pool of resources.
+
+Vertical scaling::
+The process of adding more power (CPU, RAM) to an existing server.
+
+== Tables and Data Presentation
+
+=== API Endpoints Reference
+
+[#api-endpoints%header%footer,stripes=hover]
+|===
+|Method |Endpoint |Description |Auth Required |Response Format
+
+|GET
+|/api/users
+|Retrieve all users
+|✅ Yes
+|JSON Array
+
+|GET
+|/api/users/{id}
+|Get specific user
+|✅ Yes
+|JSON Object
+
+|POST
+|/api/users
+|Create new user
+|✅ Yes
+|JSON Object
+
+|PUT
+|/api/users/{id}
+|Update user
+|✅ Yes
+|JSON Object
+
+|DELETE
+|/api/users/{id}
+|Delete user
+|✅ Yes
+|204 No Content
+
+|POST
+|/api/auth/login
+|User authentication
+|❌ No
+|JSON with token
+
+|POST
+|/api/auth/refresh
+|Refresh JWT token
+|✅ Yes
+|JSON with new token
+
+3+h|Total Endpoints: 7
+2+|All endpoints support JSON format
+|===
+
+=== Performance Metrics
+
+[%autowidth.stretch]
+|===
+|Metric |Development |Staging |Production |Target
+
+|Response Time (avg)
+|45ms
+|38ms
+|52ms
+|<100ms
+
+|Throughput (req/sec)
+|1,200
+|1,500
+|2,100
+|>2,000
+
+|Error Rate
+|0.5%
+|0.3%
+|0.1%
+|<0.5%
+
+|CPU Usage
+|25%
+|35%
+|45%
+|<70%
+
+|Memory Usage
+|512MB
+|768MB
+|1.2GB
+|<2GB
+
+|Disk I/O
+|Low
+|Medium
+|High
+|Acceptable
+|===
+
+=== Browser Compatibility Matrix
+
+[cols="1,^1,^1,^1,^1,^1"]
+|===
+|Feature |Chrome |Firefox |Safari |Edge |Mobile
+
+|ES6 Modules
+|✅
+|✅
+|✅
+|✅
+|✅
+
+|CSS Grid
+|✅
+|✅
+|✅
+|✅
+|⚠️
+
+|WebAssembly
+|✅
+|✅
+|✅
+|✅
+|❌
+
+|Service Workers
+|✅
+|✅
+|✅
+|✅
+|✅
+
+|Web Components
+|✅
+|✅
+|⚠️
+|✅
+|⚠️
+|===
+
+== Mathematical Expressions and Formulas
+
+=== Performance Calculations
+
+The response time formula for our load balancer:
+
+[stem]
+++++
+T_{response} = T_{network} + T_{processing} + T_{database}
+++++
+
+Where:
+- stem:[T_{network}] = Network latency - stem:[T_{processing}] = Server processing time - stem:[T_{database}] = Database query time
+
+=== Algorithm Complexity
+
+Big O notation examples:
+
+[stem]
+++++
+\begin{align}
+O(1) &= \text{Constant time} \\
+O(\log n) &= \text{Logarithmic time} \\
+O(n) &= \text{Linear time} \\
+O(n \log n) &= \text{Linearithmic time} \\
+O(n^2) &= \text{Quadratic time}
+\end{align}
+++++
+
+=== Database Query Optimization
+
+Query performance improvement:
+
+[stem]
+++++
+\text{Improvement} = \frac{\text{Time}_{before} - \text{Time}_{after}}{\text{Time}_{before}} \times 100\%
+++++
+
+Example: A query that took 500ms now takes 50ms:
+
+[stem]
+++++
+\text{Improvement} = \frac{500 - 50}{500} \times 100\% = 90\%
+++++
+
+== Images and Media
+
+=== Architecture Diagrams
+
+.System Architecture Overview
+image::https://picsum.photos/800/600[System Architecture,800,600,align=center]
+
+The above diagram illustrates our microservices architecture with the following components:
+
+* Load balancer for traffic distribution
+* API Gateway for request routing
+* Authentication service for user management
+* Database cluster for data persistence
+* Cache layer for performance optimization
+
+=== Responsive Image Examples
+
+.Mobile Application Mockup
+image::https://picsum.photos/400/800[Mobile App Mockup,400,800,role=text-left]
+
+.Desktop Dashboard
+image::https://picsum.photos/1200/800[Desktop Dashboard,1200,800,role=text-right]
+
+=== Interactive Elements
+
+.Technology Stack Visualization
+image::https://picsum.photos/600/400[Technology Stack,600,400,opts=interactive,align=center]
+
+== Admonitions and Callouts
+
+[TIP]
+====
+.Pro Tip: Development Best Practices
+When working with asynchronous JavaScript, always use `try-catch` blocks with `async/await` to handle errors gracefully.
+This prevents unhandled promise rejections that can crash your application.
+
+[source,javascript]
+----
+// Good practice
+try {
+  const result = await apiCall();
+  return result;
+} catch (error) {
+  logger.error('API call failed:', error);
+  throw new CustomError('Service unavailable');
+}
+----
+====
+
+[NOTE]
+====
+.Environment Variables
+Remember to set up your environment variables properly:
+
+* `DATABASE_URL`: Connection string for PostgreSQL
+* `JWT_SECRET`: Secret key for JWT token signing
+* `REDIS_URL`: Redis connection string for caching
+* `NODE_ENV`: Environment type (development/staging/production)
+
+Never commit sensitive environment variables to version control!
+====
+
+[IMPORTANT]
+====
+.Security Considerations
+Always implement proper input validation and sanitization:
+
+1. Validate all user inputs on both client and server side
+2. Use parameterized queries to prevent SQL injection
+3. Implement rate limiting to prevent abuse
+4. Use HTTPS in production environments
+5. Regularly update dependencies to patch security vulnerabilities
+====
+
+[WARNING]
+====
+.Database Migration Warning
+Before running database migrations in production:
+
+- [ ] Create a full database backup
+- [ ] Test the migration on staging environment
+- [ ] Plan for rollback strategy
+- [ ] Schedule during low-traffic periods
+- [ ] Monitor application performance post-migration
+
+A failed migration can result in data loss and application downtime.
+====
+
+[CAUTION]
+====
+.Breaking Changes in v2.0
+The upcoming v2.0 release includes breaking changes:
+
+* Authentication endpoints have changed from `/auth/*` to `/api/auth/*`
+* User model now requires `email` field (previously optional)
+* Deprecated `getUserByName()` method removed
+* Response format changed from XML to JSON only
+
+Please review the migration guide before upgrading.
+====
+
+== User Interface Elements
+
+=== Navigation Instructions
+
+To access the user management panel:
+
+1. Navigate to menu:Settings[User Management]
+2. Click btn:[Add User] to create a new account
+3. Fill in the required fields
+4. Press kbd:[Ctrl+S] to save changes
+5. Use kbd:[Ctrl+Z] to undo if needed
+
+=== Keyboard Shortcuts
+
+[cols="1,2"]
+|===
+|Shortcut |Action
+
+|kbd:[Ctrl+N]
+|Create new document
+
+|kbd:[Ctrl+Shift+P]
+|Open command palette
+
+|kbd:[Alt+F4]
+|Close application
+
+|kbd:[F5]
+|Refresh page
+
+|kbd:[Ctrl+/]
+|Toggle comment
+|===
+
+=== Form Elements
+
+Common form interactions:
+
+* Select menu:File[New > Project] to start
+* Choose your framework from the dropdown
+* Click btn:[Generate] to create project structure
+* Press btn:[Deploy] when ready for production
+
+== Code Blocks and Snippets
+
+=== Inline Code Examples
+
+The `fetch()` API is modern way to make HTTP requests.
+Use `JSON.parse()` for parsing responses, and `localStorage.setItem()` for client-side storage.
+
+=== Configuration Files
+
+.package.json
+[source,json]
+----
+{
+  "name": "web-development-guide",
+  "version": "1.0.0",
+  "description": "Modern web development project template",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack serve --mode development",
+    "build": "webpack --mode production",
+    "test": "jest",
+    "lint": "eslint src/",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "axios": "^1.4.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.0",
+    "@babel/preset-env": "^7.22.0",
+    "@babel/preset-react": "^7.22.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.0",
+    "webpack-dev-server": "^4.15.0"
+  },
+  "keywords": ["react", "webpack", "babel", "modern"],
+  "author": "Development Team",
+  "license": "MIT"
+}
+----
+
+=== Environment Configuration
+
+.docker-compose.yml
+[source,yaml]
+----
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://user:password@db:5432/myapp
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    networks:
+      - app-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: myapp
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  app-network:
+    driver: bridge
+----
+
+== Advanced Features
+
+=== Sidebar Content
+
+.Development Workflow
+****
+Our development process follows these key principles:
+
+1. **Continuous Integration**: Every commit triggers automated tests
+2. **Code Review**: All changes require peer review
+3. **Documentation**: Every feature includes comprehensive docs
+4. **Testing**: Minimum 80% code coverage required
+5. **Deployment**: Automated deployment to staging environment
+
+Tools we use:
+* GitHub for version control * Jest for testing * ESLint for code quality * Prettier for code formatting * Docker for containerization
+****
+
+=== Collapsible Content
+
+.Click to see detailed API response structure
+[%collapsible]
+====
+[source,json]
+----
+{
+  "status": "success",
+  "data": {
+    "users": [
+      {
+        "id": 1,
+        "username": "john_doe",
+        "email": "john@example.com",
+        "profile": {
+          "firstName": "John",
+          "lastName": "Doe",
+          "avatar": "https://example.com/avatars/john.jpg",
+          "preferences": {
+            "theme": "dark",
+            "notifications": true,
+            "language": "en"
+          }
+        },
+        "roles": ["user", "moderator"],
+        "createdAt": "2023-01-15T10:30:00Z",
+        "lastLoginAt": "2023-12-01T14:22:00Z"
+      }
+    ]
+  },
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 10,
+    "totalItems": 100,
+    "itemsPerPage": 10
+  },
+  "meta": {
+    "requestId": "abc123",
+    "timestamp": "2023-12-01T15:30:00Z",
+    "apiVersion": "2.1"
+  }
+}
+----
+====
+
+.Database Schema Details
+[%collapsible]
+====
+Our database schema includes the following tables:
+
+* `users`: User account information
+* `profiles`: Extended user profile data
+* `roles`: User role definitions
+* `permissions`: System permission mapping
+* `sessions`: Active user sessions
+* `audit_log`: System activity tracking
+
+Each table includes standard fields:
+- `id`: Primary key (UUID) - `created_at`: Timestamp - `updated_at`: Timestamp - `deleted_at`: Soft delete timestamp
+====
+
+=== Quote Blocks
+
+[quote,Martin Fowler,Refactoring: Improving the Design of Existing Code]
+____
+Any fool can write code that a computer can understand.
+Good programmers write code that humans can understand.
+____
+
+[quote,Donald Knuth]
+____
+Premature optimization is the root of all evil.
+____
+
+.Team Philosophy
+[verse,Development Team]
+____
+Code is read more often than it is written,
+Documentation is not optional,
+Testing is not a luxury,
+Simplicity is the ultimate sophistication.
+____
+
+=== File Trees and Directory Structure
+
+.Project Directory Structure
+....
+my-web-project/
+├── src/
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── Header.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   └── Navigation.jsx
+│   │   ├── forms/
+│   │   │   ├── LoginForm.jsx
+│   │   │   └── UserForm.jsx
+│   │   └── pages/
+│   │       ├── HomePage.jsx
+│   │       ├── UserPage.jsx
+│   │       └── SettingsPage.jsx
+│   ├── services/
+│   │   ├── api.js
+│   │   ├── auth.js
+│   │   └── validation.js
+│   ├── styles/
+│   │   ├── globals.css
+│   │   ├── components.css
+│   │   └── utilities.css
+│   ├── utils/
+│   │   ├── helpers.js
+│   │   ├── constants.js
+│   │   └── formatters.js
+│   ├── tests/
+│   │   ├── components/
+│   │   ├── services/
+│   │   └── utils/
+│   └── index.js
+├── public/
+│   ├── index.html
+│   ├── favicon.ico
+│   └── manifest.json
+├── docs/
+│   ├── api/
+│   ├── deployment/
+│   └── development/
+├── config/
+│   ├── webpack.config.js
+│   ├── babel.config.js
+│   └── jest.config.js
+├── scripts/
+│   ├── build.sh
+│   ├── deploy.sh
+│   └── test.sh
+├── .env.example
+├── .gitignore
+├── .eslintrc.js
+├── .prettierrc
+├── docker-compose.yml
+├── Dockerfile
+├── package.json
+├── package-lock.json
+└── README.md
+....
+
+== Cross-references and Anchors
+
+[#database-setup]
+=== Database Setup Guide
+
+This section provides comprehensive database setup instructions.
+You can reference this from anywhere in the document using `<<database-setup>>`.
+
+[#api-documentation]
+=== API Documentation
+
+Complete API documentation with examples and best practices.
+
+==== Authentication Endpoints
+
+[#auth-endpoints]
+All authentication endpoints require proper headers and follow REST conventions.
+
+=== User Management Panel
+
+[#user-management]
+User management endpoints for CRUD operations.
+
+== Footnotes and Citations
+
+Modern web development requires understanding of multiple technologies.footnote:[The average web developer should know at least 5-7 different programming languages and frameworks.] Performance optimization is crucial for user experience.footnote:[Studies show that 53% of users abandon sites that take longer than 3 seconds to load.]
+
+Security considerations must be implemented from the start of development.footnote:[According to OWASP, the top 10 web application security risks include injection attacks, broken authentication, and sensitive data exposure.]
+
+== Miscellaneous Elements
+
+=== Horizontal Rules
+
+This is some content above the rule.
+
+'''
+
+This is content below the horizontal rule.
+
+---
+
+Another section after a different rule style.
+
+=== Page Breaks
+
+In print media, you might want page breaks:
+
+<<<
+
+This content would start on a new page when printed.
+
+=== Comments
+
+// This is a comment that won't appear in the output
+// Comments are useful for documentation writers
+
+=== Escaping and Special Characters
+
+Sometimes you need to escape AsciiDoc syntax:
+
+- A plus sign: {plus}
+- A hash symbol: {hash}
+- Curly braces: {open} and {close}
+- A dollar sign: {dollar}
+
+=== Custom Attributes
+
+:project-name: WebDev Pro
+:version: 2.1.0
+:author-email: dev-team@example.com
+:github-url: https://github.com/company/webdev-pro
+
+Welcome to {project-name} version {version}!
+
+Contact us at {author-email} or visit our repository at {github-url}.
+
+=== Bibliography and References
+
+[bibliography]
+== References
+
+- [[[clean-code]]] Martin, Robert C. _Clean Code: A Handbook of Agile Software Craftsmanship_.
+Prentice Hall, 2008.
+- [[[design-patterns]]] Gamma, Erich, et al. _Design Patterns: Elements of Reusable Object-Oriented Software_.
+Addison-Wesley, 1994.
+- [[[mdn-docs]]] Mozilla Developer Network. _Web APIs Documentation_. https://developer.mozilla.org/en-US/docs/Web/API
+- [[[react-docs]]] React Team. _React Documentation_. https://react.dev/
+- [[[node-docs]]] Node.js Foundation. _Node.js Documentation_. https://nodejs.org/en/docs/
+
+== Appendices
+
+[appendix]
+=== Environment Variables Reference
+
+[%header,cols="1,2,1"]
+|===
+|Variable |Description |Example
+
+|`NODE_ENV`
+|Application environment
+|`production`
+
+|`DATABASE_URL`
+|Database connection string
+|`postgresql://user:pass@localhost/db`
+
+|`JWT_SECRET`
+|JWT signing secret
+|`your-secret-key-here`
+
+|`REDIS_URL`
+|Redis connection string
+|`redis://localhost:6379`
+
+|`LOG_LEVEL`
+|Application log level
+|`info`
+|===
+
+[appendix]
+=== Troubleshooting Guide
+
+==== Common Issues
+
+Connection timeouts::
+Check your network configuration and firewall settings.
+
+Database connection errors::
+Verify your database credentials and connection string.
+
+Build failures::
+Clear your node_modules and reinstall dependencies.
+
+==== Debug Commands
+
+[source,bash]
+----
+# Check application logs
+$ docker logs app-container
+
+# Database connection test
+$ psql $DATABASE_URL -c "SELECT 1"
+
+# Redis connection test
+$ redis-cli ping
+
+# Application health check
+$ curl -f http://localhost:3000/health
+----
+
+
+// ...existing code...
+
+=== Custom Attributes
+
+:project-name: WebDev Pro
+:version: 2.1.0
+:author-email: dev-team@example.com
+:github-url: https://github.com/company/webdev-pro
+
+Welcome to {project-name} version {version}!
+
+Contact us at {author-email} or visit our repository at {github-url}.
+
+== Diagrams and Visualizations with Kroki
+
+=== PlantUML Diagrams
+
+[kroki,plantuml]
+....
+Alice -> Bob: Hello
+....
+
+==== System Architecture
+
+[kroki,plantuml]
+....
+@startuml
+
+title System Architecture - WebDev Pro Platform
+
+package "Frontend" {
+  [React SPA] as Frontend
+  [Redux Store] as Store
+  [Router] as Router
+}
+
+package "API Gateway" {
+  [Kong Gateway] as Gateway
+  [Rate Limiter] as RateLimit
+  [Auth Middleware] as AuthMW
+}
+
+package "Microservices" {
+  [User Service] as UserSvc
+  [Product Service] as ProductSvc
+  [Order Service] as OrderSvc
+  [Payment Service] as PaymentSvc
+  [Notification Service] as NotificationSvc
+}
+
+package "Data Layer" {
+  database "PostgreSQL" as DB
+  database "Redis Cache" as Cache
+  database "MongoDB" as MongoDB
+}
+
+package "External Services" {
+  [Stripe API] as Stripe
+  [SendGrid] as Email
+  [AWS S3] as S3
+}
+
+Frontend --> Gateway : HTTPS/REST
+Gateway --> RateLimit
+Gateway --> AuthMW
+Gateway --> UserSvc
+Gateway --> ProductSvc
+Gateway --> OrderSvc
+Gateway --> PaymentSvc
+
+UserSvc --> DB
+ProductSvc --> DB
+OrderSvc --> DB
+PaymentSvc --> Stripe
+NotificationSvc --> Email
+
+UserSvc --> Cache
+ProductSvc --> Cache
+OrderSvc --> MongoDB
+
+@enduml
+....
+
+==== User Authentication Flow
+
+[plantuml]
+....
+@startuml
+title User Authentication & Authorization Flow
+
+actor User
+participant "Frontend" as FE
+participant "API Gateway" as GW
+participant "Auth Service" as Auth
+participant "User Service" as UserSvc
+database "PostgreSQL" as DB
+database "Redis" as Cache
+
+User -> FE: Login Request
+FE -> GW: POST /auth/login
+GW -> Auth: Authenticate User
+Auth -> UserSvc: Validate Credentials
+UserSvc -> DB: Query User
+DB -> UserSvc: User Data
+UserSvc -> Auth: User Valid
+Auth -> Cache: Store Session
+Cache -> Auth: Session ID
+Auth -> GW: JWT Token + Session
+GW -> FE: Token Response
+FE -> User: Login Success
+
+note right of Cache
+  Session expires in 24h
+  Refresh token valid for 7 days
+end note
+
+User -> FE: Access Protected Route
+FE -> GW: GET /api/profile (Bearer Token)
+GW -> Auth: Verify Token
+Auth -> Cache: Check Session
+Cache -> Auth: Session Valid
+Auth -> GW: Authorized
+GW -> UserSvc: Get Profile
+UserSvc -> DB: Query Profile
+DB -> UserSvc: Profile Data
+UserSvc -> GW: Profile Response
+GW -> FE: Profile Data
+FE -> User: Display Profile
+
+@enduml
+....
+
+==== Database Schema
+
+[plantuml]
+....
+@startuml
+!theme plain
+title Database Schema - E-commerce Platform
+
+entity "users" {
+  * id : UUID <<PK>>
+  --
+  * username : VARCHAR(50) <<UK>>
+  * email : VARCHAR(100) <<UK>>
+  * password_hash : VARCHAR(255)
+  * first_name : VARCHAR(50)
+  * last_name : VARCHAR(50)
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+  * is_active : BOOLEAN
+}
+
+entity "profiles" {
+  * id : UUID <<PK>>
+  * user_id : UUID <<FK>>
+  --
+  avatar_url : VARCHAR(255)
+  bio : TEXT
+  phone : VARCHAR(20)
+  address : JSON
+  preferences : JSON
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+entity "products" {
+  * id : UUID <<PK>>
+  --
+  * name : VARCHAR(255)
+  * slug : VARCHAR(255) <<UK>>
+  description : TEXT
+  * price : DECIMAL(10,2)
+  * category_id : UUID <<FK>>
+  * inventory_count : INTEGER
+  images : JSON
+  metadata : JSON
+  is_active : BOOLEAN
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+entity "categories" {
+  * id : UUID <<PK>>
+  --
+  * name : VARCHAR(100) <<UK>>
+  description : TEXT
+  parent_id : UUID <<FK>>
+  sort_order : INTEGER
+  is_active : BOOLEAN
+  created_at : TIMESTAMP
+}
+
+entity "orders" {
+  * id : UUID <<PK>>
+  * user_id : UUID <<FK>>
+  --
+  * order_number : VARCHAR(50) <<UK>>
+  * status : ENUM
+  * total_amount : DECIMAL(10,2)
+  shipping_address : JSON
+  billing_address : JSON
+  payment_method : VARCHAR(50)
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+entity "order_items" {
+  * id : UUID <<PK>>
+  * order_id : UUID <<FK>>
+  * product_id : UUID <<FK>>
+  --
+  * quantity : INTEGER
+  * unit_price : DECIMAL(10,2)
+  * total_price : DECIMAL(10,2)
+  created_at : TIMESTAMP
+}
+
+users ||--|| profiles : "has profile"
+users ||--o{ orders : "places orders"
+products }o--|| categories : "belongs to"
+orders ||--o{ order_items : "contains"
+products ||--o{ order_items : "ordered as"
+categories ||--o{ categories : "parent/child"
+
+@enduml
+....
+
+=== Mermaid Diagrams
+
+==== CI/CD Pipeline
+
+[mermaid]
+....
+graph TD
+    A[Developer Push] --> B[GitHub Webhook]
+    B --> C[GitHub Actions]
+    C --> D[Run Tests]
+    D --> E{Tests Pass?}
+    E -->|No| F[Notify Developer]
+    E -->|Yes| G[Build Docker Image]
+    G --> H[Push to Registry]
+    H --> I[Deploy to Staging]
+    I --> J[Run E2E Tests]
+    J --> K{E2E Pass?}
+    K -->|No| L[Rollback]
+    K -->|Yes| M[Deploy to Production]
+    M --> N[Health Check]
+    N --> O{Health OK?}
+    O -->|No| P[Auto Rollback]
+    O -->|Yes| Q[Notify Success]
+
+    F --> R[Fix & Commit]
+    R --> A
+    L --> S[Investigate]
+    P --> T[Alert DevOps]
+
+    style A fill:#e1f5fe
+    style Q fill:#e8f5e8
+    style F fill:#ffebee
+    style L fill:#ffebee
+    style P fill:#ffebee
+....
+
+==== User Journey Flow
+
+[mermaid]
+....
+journey
+    title User Registration & First Purchase Journey
+    section Discovery
+      Visit Homepage: 3: User
+      Browse Products: 4: User
+      View Product Details: 5: User
+    section Registration
+      Click Sign Up: 3: User
+      Fill Registration Form: 2: User
+      Email Verification: 1: User
+      Complete Profile: 4: User
+    section First Purchase
+      Add to Cart: 5: User
+      Review Cart: 4: User
+      Proceed to Checkout: 3: User
+      Enter Payment Details: 2: User
+      Complete Purchase: 5: User
+    section Post-Purchase
+      Receive Confirmation: 5: User
+      Track Order: 4: User
+      Receive Product: 5: User
+      Leave Review: 4: User
+....
+
+==== System State Diagram
+
+[mermaid]
+....
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Processing : API Request
+    Processing --> Authenticating : Has Auth Token
+    Processing --> Rejected : No Auth Token
+
+    Authenticating --> Authorized : Valid Token
+    Authenticating --> Unauthorized : Invalid Token
+
+    Authorized --> ValidatingData : Process Request
+    ValidatingData --> DataValid : Valid Input
+    ValidatingData --> DataInvalid : Invalid Input
+
+    DataValid --> DatabaseQuery : Execute Query
+    DatabaseQuery --> QuerySuccess : Success
+    DatabaseQuery --> QueryError : Error
+
+    QuerySuccess --> ResponseSent : Send Response
+    QueryError --> ErrorResponse : Send Error
+    DataInvalid --> ErrorResponse : Send Validation Error
+    Unauthorized --> ErrorResponse : Send Auth Error
+    Rejected --> ErrorResponse : Send Rejection
+
+    ResponseSent --> Idle
+    ErrorResponse --> Idle
+
+    note right of Authenticating
+        JWT validation with
+        expiration check
+    end note
+
+    note right of DatabaseQuery
+        Includes connection pooling
+        and query optimization
+    end note
+....
+
+=== Graphviz Diagrams
+
+==== Network Architecture
+
+[graphviz]
+....
+digraph NetworkArchitecture {
+  rankdir=TB;
+  node [shape=box, style=filled];
+
+  subgraph cluster_internet {
+    label="Internet";
+    style=filled;
+    color=lightgrey;
+
+    Users [label="Users\n(Web/Mobile)", fillcolor=lightblue];
+    CDN [label="CloudFront CDN", fillcolor=orange];
+  }
+
+  subgraph cluster_aws {
+    label="AWS Cloud";
+    style=filled;
+    color=lightcyan;
+
+    subgraph cluster_public {
+      label="Public Subnet";
+      style=filled;
+      color=lightgreen;
+
+      ALB [label="Application\nLoad Balancer", fillcolor=yellow];
+      NAT [label="NAT Gateway", fillcolor=yellow];
+    }
+
+    subgraph cluster_private {
+      label="Private Subnet";
+      style=filled;
+      color=lightpink;
+
+      ECS1 [label="ECS Task 1\n(API Server)", fillcolor=lightcoral];
+      ECS2 [label="ECS Task 2\n(API Server)", fillcolor=lightcoral];
+      ECS3 [label="ECS Task 3\n(Worker)", fillcolor=lightcoral];
+    }
+
+    subgraph cluster_data {
+      label="Data Subnet";
+      style=filled;
+      color=lightyellow;
+
+      RDS [label="RDS PostgreSQL\n(Master)", fillcolor=gold];
+      RDS_READ [label="RDS PostgreSQL\n(Read Replica)", fillcolor=gold];
+      ElastiCache [label="ElastiCache\n(Redis)", fillcolor=gold];
+    }
+  }
+
+  subgraph cluster_external {
+    label="External Services";
+    style=filled;
+    color=lavender;
+
+    Stripe [label="Stripe API", fillcolor=plum];
+    SendGrid [label="SendGrid", fillcolor=plum];
+    S3 [label="S3 Bucket", fillcolor=plum];
+  }
+
+  Users -> CDN;
+  CDN -> ALB;
+  ALB -> ECS1;
+  ALB -> ECS2;
+  ECS1 -> RDS;
+  ECS2 -> RDS;
+  ECS1 -> RDS_READ;
+  ECS2 -> RDS_READ;
+  ECS1 -> ElastiCache;
+  ECS2 -> ElastiCache;
+  ECS3 -> ElastiCache;
+
+  ECS1 -> NAT [style=dashed];
+  ECS2 -> NAT [style=dashed];
+  ECS3 -> NAT [style=dashed];
+  NAT -> Stripe;
+  NAT -> SendGrid;
+  NAT -> S3;
+}
+....
+
+==== Component Dependencies
+
+[graphviz]
+....
+digraph ComponentDependencies {
+  rankdir=LR;
+  node [shape=rect, style=filled];
+
+  Frontend [label="React Frontend\n@2.1.0", fillcolor=lightblue];
+
+  APIGateway [label="API Gateway\n@1.5.0", fillcolor=lightgreen];
+
+  AuthService [label="Auth Service\n@1.2.0", fillcolor=lightcoral];
+  UserService [label="User Service\n@1.8.0", fillcolor=lightcoral];
+  ProductService [label="Product Service\n@2.0.0", fillcolor=lightcoral];
+  OrderService [label="Order Service\n@1.4.0", fillcolor=lightcoral];
+  PaymentService [label="Payment Service\n@1.1.0", fillcolor=lightcoral];
+  NotificationService [label="Notification Service\n@1.0.0", fillcolor=lightcoral];
+
+  Database [label="PostgreSQL\n@15.0", fillcolor=gold];
+  Cache [label="Redis\n@7.0", fillcolor=gold];
+  MessageQueue [label="RabbitMQ\n@3.11", fillcolor=gold];
+
+  Stripe [label="Stripe API\nv2023-10-16", fillcolor=plum];
+  SendGrid [label="SendGrid API\nv3", fillcolor=plum];
+  S3 [label="AWS S3\nAPI", fillcolor=plum];
+
+  Frontend -> APIGateway;
+
+  APIGateway -> AuthService;
+  APIGateway -> UserService;
+  APIGateway -> ProductService;
+  APIGateway -> OrderService;
+  APIGateway -> PaymentService;
+
+  AuthService -> Database;
+  AuthService -> Cache;
+
+  UserService -> Database;
+  UserService -> Cache;
+
+  ProductService -> Database;
+  ProductService -> Cache;
+  ProductService -> S3;
+
+  OrderService -> Database;
+  OrderService -> MessageQueue;
+
+  PaymentService -> Database;
+  PaymentService -> Stripe;
+  PaymentService -> MessageQueue;
+
+  NotificationService -> SendGrid;
+  NotificationService -> MessageQueue;
+
+  { rank=same; Frontend }
+  { rank=same; APIGateway }
+  { rank=same; AuthService; UserService; ProductService; OrderService; PaymentService; NotificationService }
+  { rank=same; Database; Cache; MessageQueue }
+  { rank=same; Stripe; SendGrid; S3 }
+}
+....
+
+=== Blockdiag Family
+
+==== Server Block Diagram
+
+[blockdiag]
+....
+blockdiag {
+  orientation = portrait;
+
+  group {
+    label = "Load Balancer Tier";
+    color = lightblue;
+
+    LB1 [label = "nginx-1\n(Primary)"];
+    LB2 [label = "nginx-2\n(Backup)"];
+  }
+
+  group {
+    label = "Application Tier";
+    color = lightgreen;
+
+    APP1 [label = "Node.js\nApp Server 1"];
+    APP2 [label = "Node.js\nApp Server 2"];
+    APP3 [label = "Node.js\nApp Server 3"];
+  }
+
+  group {
+    label = "Database Tier";
+    color = lightyellow;
+
+    DB_MASTER [label = "PostgreSQL\nMaster"];
+    DB_SLAVE [label = "PostgreSQL\nRead Replica"];
+    CACHE [label = "Redis\nCache"];
+  }
+
+  group {
+    label = "Storage Tier";
+    color = lightpink;
+
+    S3 [label = "AWS S3\nFile Storage"];
+    BACKUP [label = "Backup\nStorage"];
+  }
+
+  LB1 -> APP1;
+  LB1 -> APP2;
+  LB1 -> APP3;
+
+  LB2 -> APP1;
+  LB2 -> APP2;
+  LB2 -> APP3;
+
+  APP1 -> DB_MASTER;
+  APP2 -> DB_MASTER;
+  APP3 -> DB_MASTER;
+
+  APP1 -> DB_SLAVE;
+  APP2 -> DB_SLAVE;
+  APP3 -> DB_SLAVE;
+
+  APP1 -> CACHE;
+  APP2 -> CACHE;
+  APP3 -> CACHE;
+
+  APP1 -> S3;
+  APP2 -> S3;
+  APP3 -> S3;
+
+  DB_MASTER -> BACKUP;
+  DB_SLAVE -> BACKUP;
+}
+....
+
+==== Network Sequence Diagram
+
+// Temporalmente comentado debido a problemas con el servidor de Kroki
+// [seqdiag]
+// ....
+// seqdiag {
+//   browser; cdn; loadbalancer; webserver; appserver; database; cache; external;
+//
+//   browser -> cdn [label = "GET /"];
+//   cdn -> loadbalancer [label = "Cache Miss"];
+//   loadbalancer -> webserver [label = "HTTP Request"];
+//   webserver -> appserver [label = "Process Request"];
+//
+//   appserver -> cache [label = "Check Cache"];
+//   cache -> appserver [label = "Cache Hit/Miss"];
+//
+//   appserver -> database [label = "Query Data", condition = "Cache Miss"];
+//   database -> appserver [label = "Return Data"];
+//
+//   appserver -> cache [label = "Update Cache"];
+//
+//   appserver -> external [label = "API Call", condition = "Required"];
+//   external -> appserver [label = "API Response"];
+//
+//   appserver -> webserver [label = "Response"];
+//   webserver -> loadbalancer [label = "HTTP Response"];
+//   loadbalancer -> cdn [label = "Response + Cache"];
+//   cdn -> browser [label = "Final Response"];
+//
+//   browser -> browser [label = "Render Page"];
+// }
+// ....
+
+_Nota: El diagrama seqdiag está temporalmente comentado debido a problemas con el servidor de Kroki._
+
+==== Activity Diagram
+
+[actdiag]
+....
+actdiag {
+  write -> review -> test -> deploy;
+
+  lane developer {
+    label = "Developer";
+    write [label = "Write Code"];
+    review [label = "Code Review"];
+    test [label = "Unit Tests"];
+  }
+
+  lane qa {
+    label = "QA Team";
+    integration [label = "Integration Tests"];
+    uat [label = "User Acceptance Tests"];
+  }
+
+  lane devops {
+    label = "DevOps";
+    deploy [label = "Deploy to Staging"];
+    monitor [label = "Monitor Performance"];
+    production [label = "Deploy to Production"];
+  }
+
+  test -> integration;
+  integration -> uat;
+  uat -> deploy;
+  deploy -> monitor;
+  monitor -> production;
+}
+....
+
+=== Ditaa ASCII Art Diagrams
+
+==== System Overview
+
+[ditaa]
+....
+    +-------------+    +-------------+    +-------------+
+    |  Frontend   |    |  Backend    |    |  Database   |
+    |             |    |             |    |             |
+    |  React SPA  |    |  Node.js    |    | PostgreSQL  |
+    |             |    |  Express    |    |             |
+    |  cGRE       |    |  cBLU       |    |  cPNK       |
+    +------+------+    +------+------+    +------+------+
+           |                  |                  |
+           |   HTTP/REST      |   SQL Queries    |
+           +------------------+------------------+
+                              |
+                    +---------+---------+
+                    |                   |
+                    |   Redis Cache     |
+                    |                   |
+                    |       cYEL        |
+                    +-------------------+
+....
+
+==== Data Flow
+
+[ditaa]
+....
+    /--------\     /--------\     /--------\     /--------\
+    |        |     |        |     |        |     |        |
+    | User   |---->| API    |---->| Auth   |---->| Cache  |
+    | Request|     | Gateway|     | Service|     | Layer  |
+    |        |     |        |     |        |     |        |
+    \--------/     \--------/     \--------/     \--------/
+         |              |              |              |
+         |              |              |              |
+         v              v              v              v
+    /--------\     /--------\     /--------\     /--------\
+    |        |     |        |     |        |     |        |
+    | Client |<----| Load   |<----| App    |<----| Database|
+    | Response|     | Balancer|     | Server |     | Query  |
+    |        |     |        |     |        |     |        |
+    \--------/     \--------/     \--------/     \--------/
+....
+
+=== Vega-Lite Charts
+
+==== API Response Time Metrics
+
+[vega-lite]
+....
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "API Response Time Trends",
+  "data": {
+    "values": [
+      {"time": "2023-12-01T00:00:00Z", "endpoint": "/api/users", "response_time": 45},
+      {"time": "2023-12-01T01:00:00Z", "endpoint": "/api/users", "response_time": 52},
+      {"time": "2023-12-01T02:00:00Z", "endpoint": "/api/users", "response_time": 38},
+      {"time": "2023-12-01T03:00:00Z", "endpoint": "/api/users", "response_time": 41},
+      {"time": "2023-12-01T04:00:00Z", "endpoint": "/api/users", "response_time": 48},
+      {"time": "2023-12-01T00:00:00Z", "endpoint": "/api/products", "response_time": 78},
+      {"time": "2023-12-01T01:00:00Z", "endpoint": "/api/products", "response_time": 82},
+      {"time": "2023-12-01T02:00:00Z", "endpoint": "/api/products", "response_time": 71},
+      {"time": "2023-12-01T03:00:00Z", "endpoint": "/api/products", "response_time": 89},
+      {"time": "2023-12-01T04:00:00Z", "endpoint": "/api/products", "response_time": 85},
+      {"time": "2023-12-01T00:00:00Z", "endpoint": "/api/orders", "response_time": 125},
+      {"time": "2023-12-01T01:00:00Z", "endpoint": "/api/orders", "response_time": 142},
+      {"time": "2023-12-01T02:00:00Z", "endpoint": "/api/orders", "response_time": 118},
+      {"time": "2023-12-01T03:00:00Z", "endpoint": "/api/orders", "response_time": 135},
+      {"time": "2023-12-01T04:00:00Z", "endpoint": "/api/orders", "response_time": 128}
+    ]
+  },
+  "mark": "line",
+  "encoding": {
+    "x": {
+      "field": "time",
+      "type": "temporal",
+      "axis": {"title": "Time"}
+    },
+    "y": {
+      "field": "response_time",
+      "type": "quantitative",
+      "axis": {"title": "Response Time (ms)"}
+    },
+    "color": {
+      "field": "endpoint",
+      "type": "nominal",
+      "scale": {"scheme": "category10"}
+    }
+  }
+}
+....
+
+==== Error Rate Dashboard
+
+[vega-lite]
+....
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Error Rate by Status Code",
+  "data": {
+    "values": [
+      {"status": "200", "count": 8540, "category": "Success"},
+      {"status": "201", "count": 1230, "category": "Success"},
+      {"status": "400", "count": 45, "category": "Client Error"},
+      {"status": "401", "count": 23, "category": "Client Error"},
+      {"status": "403", "count": 12, "category": "Client Error"},
+      {"status": "404", "count": 67, "category": "Client Error"},
+      {"status": "500", "count": 8, "category": "Server Error"},
+      {"status": "502", "count": 3, "category": "Server Error"},
+      {"status": "503", "count": 2, "category": "Server Error"}
+    ]
+  },
+  "mark": "arc",
+  "encoding": {
+    "theta": {"field": "count", "type": "quantitative"},
+    "color": {
+      "field": "category",
+      "type": "nominal",
+      "scale": {
+        "domain": ["Success", "Client Error", "Server Error"],
+        "range": ["#2E8B57", "#FF6347", "#DC143C"]
+      }
+    },
+    "tooltip": [
+      {"field": "status", "type": "nominal"},
+      {"field": "count", "type": "quantitative"},
+      {"field": "category", "type": "nominal"}
+    ]
+  }
+}
+....
+
+=== Nomnoml Diagrams
+
+==== Class Diagram
+
+[nomnoml]
+....
+#direction: right
+#fill: #8f8; #acf
+#.interface: fill=#8f8 dashed
+#.abstract: fill=#feb
+
+[<abstract>BaseService]
+[<interface>IUserRepository]
+[<interface>IEmailService]
+
+[BaseService]<:--[UserService]
+[BaseService]<:--[AuthService]
+[BaseService]<:--[EmailService]
+
+[UserService] -> [IUserRepository]
+[UserService] -> [IEmailService]
+[AuthService] -> [IUserRepository]
+[EmailService] -> [IEmailService]
+
+[UserService|
+  +createUser(userData)
+  +updateUser(id, data)
+  +deleteUser(id)
+  +findById(id)
+  +findByEmail(email)
+  -validateUserData(data)
+  -hashPassword(password)
+]
+
+[AuthService|
+  +authenticate(email, password)
+  +generateToken(user)
+  +validateToken(token)
+  +refreshToken(refreshToken)
+  +logout(token)
+  -createSession(user)
+  -invalidateSession(token)
+]
+
+[EmailService|
+  +sendWelcomeEmail(user)
+  +sendResetPassword(email)
+  +sendOrderConfirmation(order)
+  +sendNotification(user, message)
+  -formatTemplate(template, data)
+  -trackDelivery(messageId)
+]
+
+[IUserRepository|
+  +save(user)
+  +findById(id)
+  +findByEmail(email)
+  +update(id, data)
+  +delete(id)
+]
+
+[IEmailService|
+  +send(to, subject, body)
+  +sendTemplate(template, data)
+  +trackStatus(messageId)
+]
+....
+
+=== Wavedrom Timing Diagrams
+
+==== SPI Communication
+
+[wavedrom]
+....
+{
+  "signal": [
+    {
+      "name": "clk",
+      "wave": "p.......",
+      "period": 2
+    },
+    {
+      "name": "CS",
+      "wave": "10.....1"
+    },
+    {
+      "name": "MOSI",
+      "wave": "0.101010",
+      "data": ["D7", "D6", "D5", "D4", "D3", "D2", "D1", "D0"]
+    },
+    {
+      "name": "MISO",
+      "wave": "0.zzzzzz.",
+      "data": ["", "", "", "", "", "", "", ""]
+    }
+  ],
+  "config": {
+    "hscale": 2
+  },
+  "head": {
+    "text": "SPI Write Transaction"
+  }
+}
+....
+
+==== API Request Timing
+
+[wavedrom]
+....
+{
+  "signal": [
+    {
+      "name": "Request",
+      "wave": "01.......0",
+      "data": ["REQ"]
+    },
+    {
+      "name": "Auth Check",
+      "wave": "0.10.....0",
+      "data": ["AUTH"]
+    },
+    {
+      "name": "DB Query",
+      "wave": "0...10...0",
+      "data": ["QUERY"]
+    },
+    {
+      "name": "Cache Update",
+      "wave": "0.....10.0",
+      "data": ["CACHE"]
+    },
+    {
+      "name": "Response",
+      "wave": "0.......10",
+      "data": ["RESP"]
+    }
+  ],
+  "config": {
+    "hscale": 3
+  },
+  "head": {
+    "text": "API Request Processing Timeline"
+  }
+}
+....
+
+=== Svgbob ASCII to SVG
+
+==== System Architecture
+
+[svgbob]
+....
+                    Internet
+                       |
+                       v
+                +--------------+
+                | Load Balancer|
+                +--------------+
+                       |
+         +-------------+-------------+
+         |                           |
+         v                           v
+  +-------------+             +-------------+
+  | Web Server 1|             | Web Server 2|
+  +-------------+             +-------------+
+         |                           |
+         +-------------+-------------+
+                       |
+                       v
+                +--------------+
+                | Database     |
+                | Cluster      |
+                +--------------+
+                       |
+                       v
+                +--------------+
+                | Backup       |
+                | Storage      |
+                +--------------+
+....
+
+==== Network Flow
+
+[svgbob]
+....
+    User Device
+         |
+         | HTTPS
+         v
+    [CDN/CloudFront]
+         |
+         | HTTP
+         v
+    [Application Load Balancer]
+         |
+         +---+---+
+         |       |
+         v       v
+    [Server A] [Server B]
+         |       |
+         +---+---+
+             |
+             v
+        [Database]
+             |
+             v
+        [Redis Cache]
+....
+
+=== Pikchr Diagrams
+
+==== System Components
+
+[pikchr]
+....
+box "Frontend" color lightblue
+arrow right 150%
+box "API Gateway" color lightgreen
+arrow right 150%
+box "Backend Services" color lightyellow
+arrow down 50%
+box "Database" color lightpink
+arrow left 150%
+box "Cache Layer" color lightcoral
+arrow left 150%
+box "Message Queue" color lavender
+....
+
+==== Data Processing Flow
+
+[pikchr]
+....
+oval "Raw Data" color lightblue
+arrow right 100%
+box "Validation" color lightgreen
+arrow right 100%
+box "Processing" color lightyellow
+arrow right 100%
+box "Storage" color lightpink
+arrow down 50%
+box "Indexing" color lightcoral
+arrow left 100%
+box "Caching" color lavender
+arrow left 100%
+box "API Response" color lightgray
+....
+
+=== Bibliography and References
+
+[bibliography]
+== References
+
+- [[[clean-code]]] Martin, Robert C. _Clean Code: A Handbook of Agile Software Craftsmanship_.
+Prentice Hall, 2008.
+- [[[design-patterns]]] Gamma, Erich, et al. _Design Patterns: Elements of Reusable Object-Oriented Software_.
+Addison-Wesley, 1994.
+- [[[mdn-docs]]] Mozilla Developer Network. _Web APIs Documentation_. https://developer.mozilla.org/en-US/docs/Web/API
+- [[[react-docs]]] React Team. _React Documentation_. https://react.dev/
+- [[[node-docs]]] Node.js Foundation. _Node.js Documentation_. https://nodejs.org/en/docs/
+- [[[kroki-docs]]] Kroki Team. _Kroki Documentation_. https://kroki.io/
+- [[[plantuml-docs]]] PlantUML Team. _PlantUML Documentation_. https://plantuml.com/
+- [[[mermaid-docs]]] Mermaid Team. _Mermaid Documentation_. https://mermaid.js.org/
+
+== Appendices
+
+[appendix]
+=== Environment Variables Reference
+
+[%header,cols="1,2,1"]
+|===
+|Variable |Description |Example
+
+|`NODE_ENV`
+|Application environment
+|`production`
+
+|`DATABASE_URL`
+|Database connection string
+|`postgresql://user:pass@localhost/db`
+
+|`JWT_SECRET`
+|JWT signing secret
+|`your-secret-key-here`
+
+|`REDIS_URL`
+|Redis connection string
+|`redis://localhost:6379`
+
+|`LOG_LEVEL`
+|Application log level
+|`info`
+|===
+
+[appendix]
+=== Troubleshooting Guide
+
+==== Common Issues
+
+Connection timeouts::
+Check your network configuration and firewall settings.
+
+Database connection errors::
+Verify your database credentials and connection string.
+
+Build failures::
+Clear your node_modules and reinstall dependencies.
+
+==== Debug Commands
+
+[source,bash]
+----
+# Check application logs
+$ docker logs app-container
+
+# Database connection test
+$ psql $DATABASE_URL -c "SELECT 1"
+
+# Redis connection test
+$ redis-cli ping
+
+# Application health check
+$ curl -f http://localhost:3000/health
+----
+
+[appendix]
+=== Glossary
+
+[glossary]
+API:: Application Programming Interface
+CRUD:: Create, Read, Update, Delete
+JWT:: JSON Web Token
+REST:: Representational State Transfer
+SPA:: Single Page Application
+SSL:: Secure Sockets Layer
+TLS:: Transport Layer Security
+UUID:: Universally Unique Identifier
+
+== Index
+
+[index]
+== Index
+
+This document covers a comprehensive range of AsciiDoc features for modern web development documentation.
+From basic text formatting to complex mathematical expressions, interactive elements, and professional documentation structures.
+
+---
+
+_This kitchen sink document demonstrates the full capabilities of AsciiDoc for creating professional, maintainable technical documentation.
+It serves as both a reference and a practical example of modern documentation practices._
+
+'''
+
+Document generated on {localdate} at {localtime}.

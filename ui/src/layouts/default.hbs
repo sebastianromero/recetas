@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+{{#if page.attributes.lang}}
+  <html lang="{{page.attributes.lang}}">
+{{else}}
+  <html lang="es">
+{{/if}}
+<head>
+  {{> head defaultPageTitle='Sin título'}}
+</head>
+<body class="article{{#with (or page.attributes.role page.role)}} {{{this}}}{{/with}}">
+{{> header}}
+{{> body}}
+{{> footer}}
+</body>
+</html>

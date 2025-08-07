@@ -1,0 +1,66 @@
+{
+  "name": "auti-ui",
+  "version": "1.0.0",
+  "description": "An archetype project that produces a UI for creating documentation sites with Antora",
+  "homepage": "https://gitlab.com/antora/antora-ui-default",
+  "license": "MPL-2.0",
+  "repository": {
+	"type": "git",
+	"url": "https://gitlab.com/antora/antora-ui-default.git"
+  },
+  "scripts": {
+	"dev": "npm run build:preview && vite",
+	"dev:watch": "concurrently \"npm run build:preview -- --watch\" \"vite\"",
+	"build": "vite build",
+	"build:preview": "vite build --mode development",
+	"preview": "vite preview",
+	"bundle": "npm run clean && vite build",
+	"bundle:lint": "npm run clean && npm run lint && vite build",
+	"clean": "rm -rf build public",
+	"lint": "npm run clean && npm run lint:css && npm run lint:js",
+	"lint:css": "stylelint 'src/css/**/*.css'",
+	"lint:js": "eslint 'src/js/**/*.js' 'src/helpers/**/*.js'",
+	"format": "prettier-eslint --write 'src/js/**/*.js' 'src/helpers/**/*.js'",
+	"pack": "node scripts/pack.js"
+  },
+  "engines": {
+	"node": ">= 8.0.0"
+  },
+  "browserslist": [
+	"last 2 versions"
+  ],
+  "devDependencies": {
+	"@asciidoctor/core": "~3.0",
+	"@fontsource-variable/lexend": "^5.2.9",
+	"archiver": "^7.0.1",
+	"asciidoctor": "^3.0.4",
+	"autoprefixer": "~10.4",
+	"concurrently": "^9.2.0",
+	"cssnano": "~7.1",
+	"eslint": "~9.31",
+	"eslint-config-xo": "^0.48.0",
+	"eslint-plugin-import": "~2.32",
+	"eslint-plugin-node": "~11.1",
+	"eslint-plugin-promise": "~7.2",
+	"eslint-plugin-standard": "~5.0",
+	"glob": "^11.0.3",
+	"handlebars": "~4.7",
+	"highlight.js": "11.11.1",
+	"js-yaml": "~4.1",
+	"postcss": "^8.5.6",
+	"postcss-calc": "~10.1",
+	"postcss-custom-properties": "~14.0",
+	"postcss-import": "~16.1",
+	"postcss-url": "~10.1",
+	"prettier-eslint": "~16.4",
+	"require-from-string": "^2.0.2",
+	"stylelint": "~16.22",
+	"stylelint-config-standard": "~38.0",
+	"typescript": "~5.8.3",
+	"vite": "^7.0.5",
+	"vite-plugin-imagemin": "^0.6.1"
+  },
+  "dependencies": {
+	"chokidar": "^4.0.3"
+  }
+}

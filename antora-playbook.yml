@@ -1,6 +1,6 @@
 site:
   title: Recetas
-  url: https://recetas.com
+  url: https://recetas.sebastianromero.cl
 content:
   sources:
     - url: .

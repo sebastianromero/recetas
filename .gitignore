@@ -1,0 +1,8 @@
+/build/
+node_modules
+/workspace/
+.idea
+.DS_Store
+package-lock.json
+/public/
+ui/public
