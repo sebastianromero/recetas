@@ -1,0 +1,54 @@
+= Masa para dumplings y wonton
+
+== Receta base
+
+* 300 g de harina
+* 160 g de agua
+* 1/4 cucharadita de sal
+* (Opcional) colorante amarillo para Siu mai estilo cantonés
+
+=== Preparación
+
+. Mezclar la harina y la sal en un bol.
+. Incorporar el agua poco a poco, mezclando hasta formar una masa homogénea.
+. Amasar durante 5–8 minutos hasta obtener una textura suave.
+. Cubrir con un paño húmedo y dejar reposar 30 minutos antes de estirar.
+. Estirar según el espesor y la forma deseados para cada uso.
+
+== Variantes y usos
+
+[cols="1,1,1,1,2",options="header"]
+|===
+| Uso | Espesor (mm) | Forma | Tamaño recomendado | Motivo
+
+| Wonton frito
+| 0,5–0,7
+| Cuadrada
+| 7×7 cm
+| Si la masa es demasiado fina, se rompe durante la fritura.
+
+| Wonton para sopa
+| <0,5
+| Cuadrada
+| 7×7 cm
+| Masa más fina para un resultado suave y jugoso en el caldo.
+
+| Dumplings (fritos, hervidos o al vapor)
+| 0,6–0,8
+| Redonda
+| 8,5 cm diámetro
+| Permite más relleno sin que la masa se rompa.
+
+| Siu mai al vapor
+| 0,5–0,7
+| Redonda
+| —
+| Tradicionalmente se usa color amarillo para diferenciarla visualmente.
+|===
+
+video::KahAeVHOx-k[youtube,width=960,height=480,rel=0,title="Easy Wonton & Dumpling Wrappers Recipe [手擀云吞&饺子皮]"]
+
+====
+Fuente: https://www.youtube.com/watch?v=KahAeVHOx-k[ Easy Wonton & Dumpling Wrappers Recipe [手擀云吞&饺子皮] por
+https://www.youtube.com/@SoupedUpRecipes[Souped Up Recipes]
+====
