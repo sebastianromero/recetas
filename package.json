@@ -1,14 +1,14 @@
 {
   "scripts": {
-    "build": "npx antora antora-playbook.yml",
-    "watch": "npx chokidar-cli 'modules/**/*' 'antora-playbook.yml' --ignore 'public/**/*' -c 'npm run build'",
-    "serve": "npx live-server public",
-    "dev": "concurrently -k -n WATCH,SERVE -c green,cyan \"npm run watch\" \"npm run serve\""
+	"build": "npx antora antora-playbook.yml",
+	"watch": "npx chokidar-cli 'modules/**/*' 'antora-playbook.yml' --ignore 'public/**/*' -c 'npm run build'",
+	"serve": "npx live-server public",
+	"dev": "concurrently -k -n WATCH,SERVE -c green,cyan \"npm run watch\" \"npm run serve\""
   },
   "devDependencies": {
-    "antora": "3.1.12",
-    "chokidar": "^4.0.3",
-    "live-server": "^1.2.2",
-    "concurrently": "^9.2.0"
+	"antora": "3.1.12",
+	"chokidar": "^4.0.3",
+	"live-server": "^1.2.2",
+	"concurrently": "^9.2.0"
   }
 }
