@@ -11,3 +11,36 @@ ui:
     url: ./ui/build/ui-bundle.zip
 output:
   dir: ./dist
+
+asciidoc:
+  attributes:
+    lang: es-CL
+    page-lang: es-CL
+    appendix-caption: Apéndice
+    caution-caption: Precaución
+    chapter-signifier: Capítulo
+    diagram: true
+    example-caption: Ejemplo
+    experimental: true
+    figure-caption: Figura
+    ifdef::listing-caption[:listing-caption: Lista]
+    ifdef::manname-title[:manname-title: Nombre]
+    ifdef::preface-title[:preface-title: Prefacio]
+    important-caption: Importante
+    last-update-label: Ultima actualización
+    mermaid-format: svg
+    mermaid: true
+    note-caption: Nota
+    page-pagination: ""
+    part-signifier: Parte
+    sectanchors: true
+    section-refsig: Sección
+    sectlinks: true
+    sectnums: false
+    stem: true
+    table-caption: Tabla
+    tip-caption: Sugerencia
+    toc-title: Tabla de Contenido
+    untitled-label: Sin título
+    version-label: Versión
+    warning-caption: Aviso
