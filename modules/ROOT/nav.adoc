@@ -4,6 +4,7 @@
 * xref:ROOT:pan-clasico.adoc[]
 * xref:ROOT:papas-fritas-german-martitegui.adoc[]
 * xref:ROOT:papas-gratinadas.adoc[]
+* xref:ROOT:pasta.adoc[]
 * xref:ROOT:salsa-blanca.adoc[]
 * xref:ROOT:tortas-fritas.adoc[]
 * xref:ROOT:wonton.adoc[]

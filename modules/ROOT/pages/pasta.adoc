@@ -1,0 +1,159 @@
+= Pasta fresca italiana
+
+== Receta base para la masa
+
+* 500 g de harina de trigo blando
+* 5 huevos enteros
+
+Para obtener una masa óptima, para la harina utilice una mezcla de 250 g de harina de trigo blando y 250 g de harina de trigo duro (sémola/sémola de trigo duro).
+
+100 g de harina serán necesarios durante la elaboración de la masa con la máquina.
+
+== Cómo preparar la máquina para el uso
+
+Fije la máquina a la mesa con la mordaza correspondiente y coloque la manivela en el orificio de los rodillos fijos.
+
+IMPORTANT: *Cuando utilice la máquina por primera vez*, límpiela con un paño ligeramente húmedo para eliminar el exceso de aceite.
+Para limpiar los rodillos, haga pasar entre ellos una pequeña cantidad de masa, que después tendrá que desecharse.
+
+== Cómo se prepara la masa
+
+Porción para 6 personas (en el costado):
+
+. Coloque la harina en un bol; después, el huevo y el agua en el medio.
+. Mezcle los huevos y el agua con un tenedor y amalgame completamente con la harina.
+
+WARNING: ¡No agregue sal!
+
+. Trabaje con las manos la masa obtenida, hasta que quede homogénea y consistente.
+- Si la masa está demasiado seca, agregue agua.
+- Si está demasiado blanda, agregue harina.
+. Retire la masa del bol y colóquela sobre la mesa ligeramente enharinada.
+. Si fuera necesario, siga trabajando la masa con las manos y córtela en pequeños trozos.
+
+WARNING: Una masa óptima nunca se adhiere a los dedos.
+
+TIP: No utilice huevos fríos, apenas sacados del refrigerador.
+
+== Cómo se prepara la masa y la pasta con la máquina Marcato Atlas 150
+
+. Coloque el regulador en `0`, tirándolo hacia fuera y girándolo, para que los rodillos lisos queden abiertos ver <<tabla-medidas>>.
+. Pase un trozo de masa por los rodillos, girando la manivela en sentido horario.
+. Espolvoree harina en ambos lados de la masa (Fig. 8) y dóblela por la mitad.
+Repita este proceso 5–6 veces hasta que tenga forma alargada y regular.
+. Corte en dos trozos y enharine ligeramente.
+. Pase una vez en cada posición del regulador hasta llegar al espesor deseado: 1, 2, 3…
+- Fettuccini: posición `5`
+- Tallarines: posición `7`
+- Espesor más fino: 2 pasadas en posición `9`.
+. Corte en piezas de 25 cm y enharine ligeramente.
+. Coloque la manivela en los rodillos de corte y pase la masa para obtener fettuccini o tallarines.
+. Coloque en el secador Tacapasta.
+
+[[tabla-medidas]]
+.Tabla de medidas de espesor de la masa en hoja
+[cols="2",options="header"]
+|===
+| Regulador
+| Espesor de la masa en hoja
+
+| n.0
+| 4,0 mm
+
+| n.1
+| 3,5 mm
+
+| n.2
+| 3,2 mm
+
+| n.3
+| 2,8 mm
+
+| n.4
+| 2,5 mm
+
+| n.5
+| 2,0 mm
+
+| n.6
+| 1,5 mm
+
+| n.7
+| 1,3 mm
+
+| n.8
+| 1,0 mm
+
+| n.9
+| 0,8 mm
+
+|===
+
+TIP: Si los rodillos no cortan, la masa está demasiado blanda.
+Trabájela, añada harina y repita en los rodillos lisos.
+
+TIP: Si la masa está demasiado seca y no es “tomada” por los rodillos de corte, trabájela, añada un poco de agua y repita en los rodillos lisos.
+
+== Conservación
+
+Coloque la pasta sobre un paño seco si la cocinará inmediatamente.
+Para conservarla (máx. 1 mes), use el secador de pasta Marcato.
+
+*Tiempo de secado:* 5–6 horas según temperatura y humedad.
+Luego, guárdela en recipientes herméticos.
+
+== Recetas
+
+=== Masa integral
+
+500 g harina integral trigo blando + 250 ml agua
+
+=== Masa ligera
+
+Sustituir 5 huevos por 250 ml agua
+
+=== Masa sin gluten
+
+300 g harina trigo sarraceno + 125 ml agua + 2 claras
+
+== Cómo se cuece la pasta
+
+. Hervir 4 L de agua con sal por cada 500 g de pasta.
+. Cocción pasta fresca: 2–4 min según espesor.
+Cocción pasta seca: 4–6 min según espesor.
+. Escurrir y pasar a la sartén con la salsa, añadir un poco de agua de cocción y queso rallado.
+Servir en platos calientes.
+
+== Cuidado y mantenimiento
+
+* No lavar con agua ni lavavajillas.
+* Limpiar con cepillo y varilla de madera.
+* Para limpieza a fondo: desmontar peines de los rodillos.
+* Para desmontar rodillos de corte: extraer con las manos.
+* Lubricar extremos con aceite de vaselina.
+
+== Nuevas recetas para pasta fresca
+
+=== Pasta verde
+
+* receta para masa base
+* 100 g de espinacas
+
+Lavar, hervir 10–15 min, licuar y agregar a la masa.
+
+=== Pasta naranja
+
+* receta para masa base
+* 150 g de zanahorias
+
+Pelar, cortar en ruedecillas, hervir 15–30 min, aplastar y agregar.
+
+=== Pasta negra
+
+* receta para masa base
+* 1 bolsita de tinta de sepia
+
+=== Pasta roja
+
+* receta para masa base
+* 1 cucharada de concentrado de tomate
